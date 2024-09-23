@@ -6,9 +6,11 @@ import { Label } from "../ui/label";
 import { RadioGroup } from "../ui/radio-group";
 import { useState } from "react";
 import axios from "axios";
-
 import { USER_API_ENDPOINT } from "@/utils/constant";
 import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/redux/authSlice.js";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -17,7 +19,10 @@ const Login = () => {
     role: "",
   });
 
+  const { loading } = useSelector((store) => store.auth);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -27,6 +32,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      dispatch(setLoading(true));
       const res = await axios.post(`${USER_API_ENDPOINT}/login`, input, {
         header: {
           "Content-Type": "application/json",
@@ -39,8 +45,9 @@ const Login = () => {
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -101,12 +108,20 @@ const Login = () => {
               </div>
             </RadioGroup>
           </div>
-          <Button
-            type="submit"
-            className="w-full my-4 bg-black text-white hover:bg-gray-700"
-          >
-            Login
-          </Button>
+          {loading ? (
+            <Button className="w-full my-4 bg-black">
+              <Loader2 className=" mr-2 h-4 w-4 animate-spin" />
+              Please wait
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="w-full my-4 bg-black text-white hover:bg-gray-700"
+            >
+              Login
+            </Button>
+          )}
+
           <span className="text-sm">
             {"Don't have an account?"}
             <Link to="/signup" className="text-blue-600">
