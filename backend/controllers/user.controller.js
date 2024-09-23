@@ -32,7 +32,7 @@ export const register = async (req, res) => {
     });
 
     return res.status(201).json({
-      messgae: "Account created successfully",
+      message: "Account created successfully",
       success: true,
     });
   } catch (error) {

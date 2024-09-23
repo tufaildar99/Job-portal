@@ -7,10 +7,11 @@ import {
   register,
   updateProfile,
 } from "../controllers/user.controller.js";
+import { singleUpload } from "../middlewares/multer.js";
 
 const router = express.Router();
 
-router.route("/register").post(register);
+router.route("/register").post(singleUpload, register);
 router.route("/login").post(login);
 router.route("/logout").post(logout);
 router.route("/profile/update").post(isAuthenticated, updateProfile);
