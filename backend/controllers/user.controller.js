@@ -69,7 +69,7 @@ export const login = async (req, res) => {
 
     //Check whether role is correct or not
     if (role !== user.role) {
-      return res.statue(400).json({
+      return res.status(400).json({
         message: "Account doesnt exist with this role",
         success: false,
       });
